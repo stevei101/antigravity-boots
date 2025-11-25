@@ -1,10 +1,9 @@
 export enum ModelId {
-    GPT_4O = "gpt-4o",
-    GPT_4O_MINI = "gpt-4o-mini",
-    CLAUDE_3_5_SONNET = "claude-3-5-sonnet",
-    GEMINI_1_5_PRO = "gemini-1.5-pro",
-    GEMINI_FLASH = "gemini-flash",
-    O1_PREVIEW = "o1-preview",
+    GEMINI_3_PRO_HIGH = "gemini-3-pro-high",
+    GEMINI_3_PRO_LOW = "gemini-3-pro-low",
+    CLAUDE_SONNET_4_5 = "claude-sonnet-4.5",
+    CLAUDE_SONNET_4_5_THINKING = "claude-sonnet-4.5-thinking",
+    GPT_OSS_120B_MEDIUM = "gpt-oss-120b-medium",
 }
 
 export interface ModelCapability {

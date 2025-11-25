@@ -49,20 +49,20 @@ export function decideModel(prompt: string): RoutingDecision {
 
     if (isCoding) {
         if (complexity > 70) {
-            return { modelId: ModelId.CLAUDE_3_5_SONNET, reason: "High complexity coding task" };
+            return { modelId: ModelId.CLAUDE_SONNET_4_5_THINKING, reason: "High complexity coding task" };
         } else if (complexity > 40) {
-            return { modelId: ModelId.GPT_4O, reason: "Medium complexity coding task" };
+            return { modelId: ModelId.CLAUDE_SONNET_4_5, reason: "Medium complexity coding task" };
         } else {
-            return { modelId: ModelId.GEMINI_FLASH, reason: "Simple coding task" };
+            return { modelId: ModelId.GEMINI_3_PRO_LOW, reason: "Simple coding task" };
         }
     } else {
         // General reasoning / chat
         if (complexity > 80) {
-            return { modelId: ModelId.O1_PREVIEW, reason: "Complex reasoning required" };
+            return { modelId: ModelId.CLAUDE_SONNET_4_5_THINKING, reason: "Complex reasoning required" };
         } else if (complexity > 50) {
-            return { modelId: ModelId.GPT_4O, reason: "General complex query" };
+            return { modelId: ModelId.GEMINI_3_PRO_HIGH, reason: "General complex query" };
         } else {
-            return { modelId: ModelId.GPT_4O_MINI, reason: "Simple query" };
+            return { modelId: ModelId.GPT_OSS_120B_MEDIUM, reason: "Simple query" };
         }
     }
 }

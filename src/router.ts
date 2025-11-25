@@ -26,10 +26,10 @@ function analyzeComplexity(prompt: string): number {
     if (prompt.length > 2000) score += 30;
 
     // Keyword heuristics
-    const complexKeywords = ["architecture", "refactor", "debug", "optimize", "security", "race condition"];
+    const complexKeywords = ["architecture", "refactor", "debug", "optimize", "security", "race condition", "microservices"];
     const simpleKeywords = ["typo", "rename", "comment", "docs"];
 
-    if (complexKeywords.some(k => prompt.toLowerCase().includes(k))) score += 40;
+    if (complexKeywords.some(k => prompt.toLowerCase().includes(k))) score += 50; // Increased from 40
     if (simpleKeywords.some(k => prompt.toLowerCase().includes(k))) score -= 10;
 
     // Code detection (naive)
@@ -39,7 +39,7 @@ function analyzeComplexity(prompt: string): number {
 }
 
 function detectCodeIntent(prompt: string): boolean {
-    const keywords = ["function", "class", "code", "script", "implement", "fix", "bug", "error", "exception"];
+    const keywords = ["function", "class", "code", "script", "implement", "fix", "bug", "error", "exception", "refactor"];
     return keywords.some(k => prompt.toLowerCase().includes(k)) || prompt.includes("```");
 }
 

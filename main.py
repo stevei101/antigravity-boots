@@ -1,7 +1,5 @@
 import argparse
 import os
-import glob
-import sys
 from src.rag_service import GeminiRAG
 
 def main():
@@ -30,10 +28,10 @@ def main():
             if os.path.isdir(args.path):
                 # Recursively find files
                 # The issue says "PDFs, MD, TXT".
-                extensions = ['pdf', 'md', 'txt']
+                extensions = ['.pdf', '.md', '.txt']
                 for root, dirs, filenames in os.walk(args.path):
                     for filename in filenames:
-                        if filename.split('.')[-1].lower() in extensions:
+                        if os.path.splitext(filename)[1].lower() in extensions:
                             files.append(os.path.join(root, filename))
             elif os.path.isfile(args.path):
                 files.append(args.path)

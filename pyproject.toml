@@ -1,7 +1,7 @@
 [project]
 name = "antigravity-boots"
 version = "0.1.0"
-description = "Add your description here"
+description = "Antigravity Boots: An AI-powered IDE agent with persistent RAG capabilities."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

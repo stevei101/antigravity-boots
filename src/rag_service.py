@@ -7,11 +7,9 @@ from typing import List, Optional
 # Configuration
 # Ensure GEMINI_API_KEY is set in environment
 if "GEMINI_API_KEY" not in os.environ:
-    # For development, you might want to load from .env if available, 
-    # but here we assume it's in the env.
-    pass
+    raise ValueError("GEMINI_API_KEY environment variable not set.")
 
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 CONFIG_FILE = "rag_store.json"
 
@@ -45,15 +43,23 @@ class GeminiRAG:
             print(f"Uploading {path}...")
             try:
                 f = genai.upload_file(path=path)
-                # Wait for file to be active? 
-                # Usually upload_file returns immediately but processing might take time.
-                # For small files it's fast.
                 uploaded_files.append(f)
             except Exception as e:
                 print(f"Failed to upload {path}: {e}")
 
         if not uploaded_files:
             raise ValueError("No files were successfully uploaded.")
+
+        # Wait for files to be processed
+        print("Waiting for files to be processed...")
+        for f in uploaded_files:
+            while f.state.name == "PROCESSING":
+                print(f"Processing {f.name}...", end=' ', flush=True)
+                time.sleep(2)
+                f = genai.get_file(f.name)
+            
+            if f.state.name != "ACTIVE":
+                print(f"\nWarning: File {f.name} is not active (State: {f.state.name}).")
 
         # 2. Create CachedContent
         # Note: CachedContent is associated with a specific model.

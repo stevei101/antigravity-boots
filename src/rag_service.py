@@ -11,7 +11,15 @@ if "GEMINI_API_KEY" not in os.environ:
 
 genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
-CONFIG_FILE = "rag_store.json"
+# Configuration Defaults
+DEFAULT_CONFIG_FILE = "rag_store.json"
+DEFAULT_MODEL_NAME = "models/gemini-1.5-flash-001"
+DEFAULT_TTL = 3600
+
+# Load Config from Env
+CONFIG_FILE = os.environ.get("RAG_STORE_FILE", DEFAULT_CONFIG_FILE)
+MODEL_NAME = os.environ.get("GEMINI_MODEL_NAME", DEFAULT_MODEL_NAME)
+CACHE_TTL = int(os.environ.get("RAG_TTL", DEFAULT_TTL))
 
 class GeminiRAG:
     def __init__(self):
@@ -63,16 +71,13 @@ class GeminiRAG:
 
         # 2. Create CachedContent
         # Note: CachedContent is associated with a specific model.
-        # We'll use gemini-1.5-flash-001 as default for RAG.
-        model_name = "models/gemini-1.5-flash-001"
-        
-        print("Creating CachedContent...")
+        print(f"Creating CachedContent with model {MODEL_NAME}...")
         try:
             cache = genai.caching.CachedContent.create(
-                model=model_name,
+                model=MODEL_NAME,
                 display_name=name,
                 contents=uploaded_files,
-                ttl=3600 # Default 1 hour, can be extended via API but costs money.
+                ttl=CACHE_TTL
             )
             
             print(f"Created Cache: {cache.name}")
@@ -80,7 +85,7 @@ class GeminiRAG:
             # 3. Persist Store ID
             self.stores[name] = {
                 "name": cache.name,
-                "model": model_name,
+                "model": MODEL_NAME,
                 "created_at": time.time(),
                 "files": [f.name for f in uploaded_files]
             }

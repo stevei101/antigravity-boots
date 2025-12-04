@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN_HERE>"
+      }
+    },
+    "cloudflare": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "@cloudflare/mcp-server-cloudflare"
+      ],
+      "env": {
+        "CLOUDFLARE_API_TOKEN": "<YOUR_TOKEN_HERE>",
+        "CLOUDFLARE_ACCOUNT_ID": "<YOUR_ACCOUNT_ID>"
+      }
+    },
+    "antigravity-boots-local": {
+      "command": "bun",
+      "args": [
+        "run",
+        "scripts/mcp-server.ts"
+      ]
+    }
+  }
+}

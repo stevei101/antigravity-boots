@@ -1,0 +1,10 @@
+[project]
+name = "antigravity-boots"
+version = "0.1.0"
+description = "Antigravity Boots: An AI-powered IDE agent with persistent RAG capabilities."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-generativeai>=0.8.5",
+    "mcp>=1.23.1",
+]

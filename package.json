@@ -1,0 +1,14 @@
+{
+    "name": "antigravity-boots",
+    "version": "0.1.0",
+    "description": "Antigravity Boots: An AI-powered IDE agent with persistent RAG capabilities.",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "devDependencies": {
+        "@modelcontextprotocol/sdk": "^1.24.2",
+        "@types/node": "^20.0.0",
+        "cli-highlight": "^2.1.11",
+        "zod": "^4.1.13"
+    }
+}

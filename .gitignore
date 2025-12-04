@@ -6,3 +6,4 @@ rag_store.json
 .DS_Store
 mcp_config.json
 node_modules/
+.antigravity/mcp_config.json

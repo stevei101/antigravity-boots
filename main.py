@@ -1,6 +1,7 @@
 import argparse
 import os
 from src.rag_service import GeminiRAG
+from src import mcp_server
 
 def main():
     parser = argparse.ArgumentParser(description="Antigravity Boots CLI")
@@ -26,6 +27,9 @@ def main():
     chat_parser = subparsers.add_parser("chat", help="Chat with a knowledge base")
     chat_parser.add_argument("--store", required=True, help="Name of the knowledge base to chat with")
 
+    # MCP Server Command
+    subparsers.add_parser("mcp", help="Run the MCP server")
+
     args = parser.parse_args()
 
     if args.command == "rag":
@@ -34,9 +38,13 @@ def main():
             files = []
             if os.path.isdir(args.path):
                 # Recursively find files
-                # The issue says "PDFs, MD, TXT".
-                extensions = ['.pdf', '.md', '.txt']
+                extensions = {'.pdf', '.md', '.txt', '.py', '.ts', '.js', '.json', '.toml'}
+                exclude_dirs = {'.git', '__pycache__', 'venv', '.venv', 'node_modules', '.idea', '.vscode'}
+                
                 for root, dirs, filenames in os.walk(args.path):
+                    # Modify dirs in-place to skip ignored directories
+                    dirs[:] = [d for d in dirs if d not in exclude_dirs]
+                    
                     for filename in filenames:
                         if os.path.splitext(filename)[1].lower() in extensions:
                             files.append(os.path.join(root, filename))
@@ -95,6 +103,10 @@ def main():
                     print(f"Error during chat: {e}")
         except Exception as e:
             print(f"Error: {e}")
+
+    elif args.command == "mcp":
+        print("Starting Antigravity RAG MCP Server...")
+        mcp_server.run()
 
     else:
         parser.print_help()

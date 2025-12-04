@@ -16,6 +16,66 @@ To enable the IDE agent to automatically select the "best available model" for a
 4.  **Fallback Mechanism**: Automatically retry with a more capable model if the first attempt fails.
 
 ### Implementation Plan
-- [ ] Define model capability schema.
-- [ ] Implement task complexity classifier.
+- [x] Define model capability schema.
+- [x] Implement task complexity classifier.
 - [ ] Create configuration for user preferences (e.g., "Always use best" vs. "Optimize for cost").
+
+## Feature: Persistent Gemini RAG
+
+Antigravity Boots now supports persistent RAG (Retrieval-Augmented Generation) using Google's Gemini API. This allows you to index your codebase or documents and query them later.
+
+### Setup
+
+1.  Set your Gemini API Key:
+    ```bash
+    export GEMINI_API_KEY="your-api-key"
+    ```
+
+2.  Install dependencies:
+    ```bash
+    uv sync
+    ```
+
+### Usage
+
+**1. Create a Knowledge Base**
+Index a directory of files (supports .pdf, .md, .txt, .py, .ts, .js, etc.):
+```bash
+uv run python main.py rag create --name "my-codebase" --path ./src
+```
+
+**2. List Knowledge Bases**
+```bash
+uv run python main.py rag list
+```
+
+**3. Chat with a Knowledge Base**
+```bash
+uv run python main.py chat --store "my-codebase"
+```
+
+**4. Delete a Knowledge Base**
+```bash
+uv run python main.py rag delete --name "my-codebase"
+```
+
+### VS Code Integration (MCP)
+
+You can expose the RAG capabilities to VS Code using the Model Context Protocol (MCP).
+
+1.  Ensure you have the [MCP Extension](https://marketplace.visualstudio.com/items?itemName=model-context-protocol.mcp) installed in VS Code (or use Claude Desktop).
+2.  Add the following to your MCP settings configuration:
+
+```json
+{
+  "mcpServers": {
+    "antigravity-rag": {
+      "command": "uv",
+      "args": ["run", "python", "/absolute/path/to/antigravity-boots/main.py", "mcp"],
+      "env": {
+        "GEMINI_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```

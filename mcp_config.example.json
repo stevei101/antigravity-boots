@@ -11,10 +11,10 @@
       }
     },
     "cloudflare": {
-      "command": "npx",
+      "command": "bunx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-cloudflare"
+        "@cloudflare/mcp-server-cloudflare"
       ],
       "env": {
         "CLOUDFLARE_API_TOKEN": "<YOUR_TOKEN_HERE>",

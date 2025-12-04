@@ -51,20 +51,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         content: [{ type: "text", text: stdout || stderr }]
       };
     }
-    
+
     if (request.params.name === "generate_migration") {
-        const name = String(request.params.arguments?.name);
-        // Validate name to prevent injection/invalid chars
-        if (!/^[a-z0-9_]+$/.test(name)) {
-            throw new Error("Invalid migration name. Use snake_case only.");
-        }
-        const { stdout, stderr } = await execAsync(`bunx wrangler d1 migrations create antigravity-db ${name}`);
-        return { content: [{ type: "text", text: stdout || stderr }] };
+      const name = String(request.params.arguments?.name);
+      // Validate name to prevent injection/invalid chars
+      if (!/^[a-z0-9_]+$/.test(name)) {
+        throw new Error("Invalid migration name. Use snake_case only.");
+      }
+      const { stdout, stderr } = await execAsync(`bunx wrangler d1 migrations create antigravity-db ${name}`);
+      return { content: [{ type: "text", text: stdout || stderr }] };
     }
 
     if (request.params.name === "list_deployments") {
-        const { stdout, stderr } = await execAsync("bunx wrangler deployments list");
-        return { content: [{ type: "text", text: stdout || stderr }] };
+      const { stdout, stderr } = await execAsync("bunx wrangler deployments list");
+      return { content: [{ type: "text", text: stdout || stderr }] };
     }
 
     throw new Error("Tool not found");

@@ -63,19 +63,27 @@ uv run python main.py rag delete --name "my-codebase"
 
 You can expose the RAG capabilities to VS Code using the Model Context Protocol (MCP).
 
-1.  Ensure you have the [MCP Extension](https://marketplace.visualstudio.com/items?itemName=model-context-protocol.mcp) installed in VS Code (or use Claude Desktop).
-2.  Add the following to your MCP settings configuration:
+**Option 1: Claude Desktop (Recommended)**
+The most reliable way to use this MCP server currently is via the [Claude Desktop App](https://claude.ai/download).
 
-```json
-{
-  "mcpServers": {
-    "antigravity-rag": {
-      "command": "uv",
-      "args": ["run", "python", "/absolute/path/to/antigravity-boots/main.py", "mcp"],
-      "env": {
-        "GEMINI_API_KEY": "your-api-key-here"
+1.  Install Claude Desktop.
+2.  Edit your `claude_desktop_config.json` (usually in `~/Library/Application Support/Claude/` on macOS):
+    ```json
+    {
+      "mcpServers": {
+        "antigravity-rag": {
+          "command": "uv",
+          "args": ["run", "python", "/absolute/path/to/antigravity-boots/main.py", "mcp"],
+          "env": {
+            "GEMINI_API_KEY": "your-api-key-here"
+          }
+        }
       }
     }
-  }
-}
-```
+    ```
+3.  Restart Claude Desktop. You can now ask Claude to "Query antigravity-codebase" or "List knowledge bases".
+
+**Option 2: VS Code Extension**
+There are several community extensions for MCP in VS Code.
+1.  Search for "MCP Client" or "Cline" (formerly Claude Dev) in the VS Code Marketplace.
+2.  Follow the extension's instructions to add a new MCP server using the command configuration above.

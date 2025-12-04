@@ -120,3 +120,31 @@ class GeminiRAG:
 
     def list_stores(self):
         return list(self.stores.keys())
+
+    def delete_store(self, name: str):
+        """Deletes a store and its associated cached content."""
+        if name not in self.stores:
+            raise ValueError(f"Store '{name}' not found.")
+
+        store_info = self.stores[name]
+        cache_name = store_info["name"]
+
+        print(f"Deleting cache {cache_name}...")
+        try:
+            # Attempt to delete the cached content from Gemini
+            # Note: The library might throw if it's already expired/gone.
+            try:
+                cache = genai.caching.CachedContent.get(cache_name)
+                cache.delete()
+                print("Remote cache deleted.")
+            except Exception as e:
+                print(f"Warning: Could not delete remote cache (maybe expired?): {e}")
+
+            # Remove from local config
+            del self.stores[name]
+            self._save_config()
+            print(f"Store '{name}' removed from local config.")
+            
+        except Exception as e:
+            print(f"Failed to delete store: {e}")
+            raise

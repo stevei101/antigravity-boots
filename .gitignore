@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 rag_store.json
 .DS_Store
+mcp_config.json
+node_modules/

@@ -13,7 +13,7 @@ genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Configuration Defaults
 DEFAULT_CONFIG_FILE = "rag_store.json"
-DEFAULT_MODEL_NAME = "models/gemini-1.5-flash-001"
+DEFAULT_MODEL_NAME = "models/gemini-2.0-flash-001"
 DEFAULT_TTL = 3600
 
 # Load Config from Env
@@ -50,7 +50,16 @@ class GeminiRAG:
                 
             print(f"Uploading {path}...")
             try:
-                f = genai.upload_file(path=path)
+                # Specify mime_type for code files if needed, but auto-detection usually works for common types.
+                # For .ts, .py, .json, text/plain or application/json might be safer if auto-detect fails.
+                mime_type = None
+                ext = os.path.splitext(path)[1].lower()
+                if ext in ['.ts', '.py', '.js', '.md', '.txt', '.toml']:
+                    mime_type = "text/plain"
+                elif ext == '.json':
+                    mime_type = "application/json"
+
+                f = genai.upload_file(path=path, mime_type=mime_type)
                 uploaded_files.append(f)
             except Exception as e:
                 print(f"Failed to upload {path}: {e}")
@@ -60,6 +69,7 @@ class GeminiRAG:
 
         # Wait for files to be processed
         print("Waiting for files to be processed...")
+        active_files = []
         for f in uploaded_files:
             while f.state.name == "PROCESSING":
                 print(f"Processing {f.name}...", end=' ', flush=True)
@@ -67,7 +77,12 @@ class GeminiRAG:
                 f = genai.get_file(f.name)
             
             if f.state.name != "ACTIVE":
-                print(f"\nWarning: File {f.name} is not active (State: {f.state.name}).")
+                print(f"\nWarning: File {f.name} is not active (State: {f.state.name}). Skipping.")
+            else:
+                active_files.append(f)
+
+        if not active_files:
+            raise ValueError("No files became ACTIVE.")
 
         # 2. Create CachedContent
         # Note: CachedContent is associated with a specific model.
@@ -76,7 +91,7 @@ class GeminiRAG:
             cache = genai.caching.CachedContent.create(
                 model=MODEL_NAME,
                 display_name=name,
-                contents=uploaded_files,
+                contents=active_files,
                 ttl=CACHE_TTL
             )
             

@@ -87,3 +87,34 @@ The most reliable way to use this MCP server currently is via the [Claude Deskto
 There are several community extensions for MCP in VS Code.
 1.  Search for "MCP Client" or "Cline" (formerly Claude Dev) in the VS Code Marketplace.
 2.  Follow the extension's instructions to add a new MCP server using the command configuration above.
+
+## Antigravity Editor: MCP Integration
+
+This project supports the Model Context Protocol (MCP) to allow the Antigravity Editor (and other AI agents) to interact with your local development environment and external services.
+
+### Setup
+
+1.  **Configuration**:
+    Copy the example configuration file:
+    ```bash
+    cp mcp_config.example.json mcp_config.json
+    ```
+    Edit `mcp_config.json` and add your secrets (GitHub Token, Cloudflare Token). **Do not commit this file.**
+
+2.  **Install Dependencies**:
+    This project uses Bun for the local MCP server.
+    ```bash
+    bun install
+    ```
+
+3.  **Local Server**:
+    The local MCP server is located at `scripts/mcp-server.ts`. It provides tools for:
+    *   Running tests (`run_test_suite`)
+    *   Generating migrations (`generate_migration`)
+    *   Listing deployments (`list_deployments`)
+
+    You can verify it runs by executing:
+    ```bash
+    bun run scripts/mcp-server.ts
+    ```
+    (It will hang waiting for input, which is expected behavior for stdio mode).
